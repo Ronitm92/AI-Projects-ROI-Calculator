@@ -288,6 +288,123 @@ JSON Schema:
     }
   });
 
+  // Dedicated Dynamic Web-Search Endpoint for Evaluation & Guardrails Governance
+  app.post("/api/research-guardrails", async (req, res) => {
+    try {
+      const { featureName, industryId, architectureType } = req.body;
+      const targetFeature = (featureName || "AI Feature").trim();
+      const targetIndustry = (industryId || "software_saas").trim();
+      const targetArch = (architectureType || "rag_agent").trim();
+
+      const ai = getAiClient();
+
+      if (ai) {
+        const prompt = `You are a Principal AI Safety Architect and Lead RAG Evaluation Engineer.
+Perform live web search research to formulate the comprehensive Evaluation and Guardrail Governance specifications for this specific enterprise AI project.
+
+Project Name: "${targetFeature}"
+Industry/Sector: "${targetIndustry}"
+Architecture: "${targetArch}"
+
+Based on the Top 8 AI Agent Guardrails and Enterprise RAG Evaluation Frameworks, formulate the project-specific governance specs:
+1. Industry regulatory/compliance standards applicable to this project (e.g. HIPAA, PCI-DSS, GDPR, EU AI Act High-Risk, SOC2 Type II, FINRA, FDA SaMD).
+2. Exact sensitive data entities to classify and redact in real time (PII/PHI/PCI/Confidential).
+3. Tool allowlist: approved safe tools vs strictly blocked/disallowed tools for this use-case.
+4. Human-in-the-Loop (HITL) approval threshold (exact dollar threshold, clinical action, or critical irreversible operation requiring human signoff).
+5. Recommended autonomy level: Assist (L1), Bounded (L2), Conditional (L3), or Full (L4).
+6. Recommended canonical golden evaluation benchmark dataset for this domain (e.g. PubMedQA, FinQA, LegalBench, SWE-bench, etc.).
+7. Target RAG stage performance SLAs:
+   - Retrieval Recall@K (e.g. "95.0%")
+   - Retrieval MRR (e.g. "0.89")
+   - Context Precision (e.g. "93.0%")
+   - Faithfulness (e.g. "98.0%")
+   - Maximum Hallucination Rate (e.g. "<1.5%")
+   - P95 Latency (e.g. "1.2s")
+8. Synthesized 2-sentence summary of live web-grounded regulatory & safety findings for this specific application.
+
+Respond strictly with valid JSON inside a \`\`\`json block.
+Schema:
+{
+  "industryStandards": ["string"],
+  "sensitiveDataEntities": ["string"],
+  "toolAllowlistApproved": ["string"],
+  "toolAllowlistBlocked": ["string"],
+  "hitlApprovalThreshold": "string",
+  "autonomyLevel": "Assist" | "Bounded" | "Conditional" | "Full",
+  "goldenBenchmarkDataset": "string",
+  "ragStageTargets": {
+    "retrievalRecall": "string",
+    "retrievalMRR": "string",
+    "contextPrecision": "string",
+    "faithfulness": "string",
+    "hallucinationRateMax": "string",
+    "latencyP95": "string"
+  },
+  "liveWebFindings": "string",
+  "webSources": [
+    { "title": "string", "uri": "string" }
+  ]
+}`;
+
+        try {
+          const geminiResponse = await ai.models.generateContent({
+            model: "gemini-3.8-flash",
+            contents: prompt,
+            config: {
+              temperature: 0.2,
+              tools: [{ googleSearch: {} }],
+            },
+          });
+
+          const rawText = geminiResponse.text || "";
+          const jsonMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || rawText.match(/(\{[\s\S]*\})/);
+          const jsonStr = jsonMatch ? jsonMatch[1] : rawText;
+          const parsed = JSON.parse(jsonStr);
+
+          // Extract grounding metadata if available
+          const groundingChunks = geminiResponse.candidates?.[0]?.groundingMetadata?.groundingChunks;
+          const webSources: Array<{ title: string; uri: string }> = [];
+          if (Array.isArray(groundingChunks)) {
+            for (const chunk of groundingChunks) {
+              const web = (chunk as { web?: { title?: string; uri?: string } }).web;
+              if (web?.uri) {
+                webSources.push({
+                  title: web.title || "Industry Safety Benchmark",
+                  uri: web.uri,
+                });
+              }
+            }
+          }
+
+          if (webSources.length > 0) {
+            const existing = Array.isArray(parsed.webSources) ? parsed.webSources : [];
+            parsed.webSources = [...existing, ...webSources].slice(0, 6);
+          }
+
+          return res.json({
+            success: true,
+            guardrailsEvalSpecs: parsed,
+            source: "gemini-search-grounded",
+          });
+        } catch (apiErr) {
+          console.warn("Gemini guardrails research failed, using heuristic engine:", apiErr);
+        }
+      }
+
+      // Fallback domain-tuned guardrails
+      const fallbackSpecs = buildHeuristicGuardrails(targetFeature, targetIndustry, targetArch);
+      return res.json({
+        success: true,
+        guardrailsEvalSpecs: fallbackSpecs,
+        source: "domain-heuristic-engine",
+      });
+    } catch (err: unknown) {
+      console.error("Research guardrails error:", err);
+      const message = err instanceof Error ? err.message : "Failed to research guardrails";
+      return res.status(500).json({ error: message });
+    }
+  });
+
   // Vite middleware in dev, static files in production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -472,6 +589,99 @@ function buildHeuristicUseCase(query: string, industryHint?: string, scaleHint?:
     sources: [
       { title: "Enterprise AI Adoption & Labor Productivity Benchmarks", uri: "https://www.gartner.com" },
       { title: "Generative AI FinOps & Token Economics Guide", uri: "https://cloud.google.com" },
+    ],
+  };
+}
+
+// Heuristic fallback for Evaluation & Guardrails Governance
+function buildHeuristicGuardrails(featureName: string, industryId?: string, archType?: string) {
+  const ind = (industryId || "").toLowerCase();
+  const name = (featureName || "").toLowerCase();
+
+  let standards = ["SOC 2 Type II", "NIST AI RMF 1.0", "ISO/IEC 42001 (AI Governance)"];
+  let sensitive = ["Employee IDs", "Customer PII (Email, Phone)", "Internal API Keys", "Unreleased Financials"];
+  let approvedTools = ["Read-Only Knowledge Retrieval API", "Vector Semantic Index", "Structured JSON Schema Validator"];
+  let blockedTools = ["Direct Shell / Bash Execution", "Raw SQL Schema Mutation / Drop", "Unauthenticated SMTP / Webhooks"];
+  let hitl = "Actions exceeding $5,000 financial impact, sensitive data export, or legal commitment require direct Human Approval.";
+  let autonomy: "Assist" | "Bounded" | "Conditional" | "Full" = "Bounded";
+  let benchmark = "Enterprise General Benchmark & Golden Curated Dataset (1,500 QA pairs)";
+  let targets = {
+    retrievalRecall: "94.5%",
+    retrievalMRR: "0.88",
+    contextPrecision: "92.0%",
+    faithfulness: "97.5%",
+    hallucinationRateMax: "<1.5%",
+    latencyP95: "1.4s",
+  };
+  let summary = `Production deployment for ${featureName} requires rigorous least-privilege RBAC token partitioning, pre-inference PII masking, and strict allowlisted tool execution with automated rollback safeguards.`;
+
+  if (ind.includes("health") || name.includes("clinic") || name.includes("medic") || name.includes("patient")) {
+    standards = ["HIPAA Security & Privacy Rule", "FDA SaMD Guidance", "HITECH Act", "NIST AI RMF"];
+    sensitive = ["Protected Health Information (PHI)", "Patient Medical Record # (MRN)", "ICD-10/CPT Diagnostics", "Physician NPI", "SSN"];
+    approvedTools = ["EHR Read-Only Fast Healthcare Interoperability Resources (FHIR) API", "RxNorm Drug Interaction Verifier", "Medical Terminology Ontology"];
+    blockedTools = ["Direct Prescription Dispensation Write", "Unattended Clinical Diagnosis Mutation", "Unencrypted S3 Export"];
+    hitl = "All clinical note exports, dosage changes, and triage recommendations require credentialed Physician / Clinician sign-off.";
+    autonomy = "Assist";
+    benchmark = "PubMedQA & MedQA Verified Golden Clinical Ground Truth Corpus";
+    targets = {
+      retrievalRecall: "98.2%",
+      retrievalMRR: "0.95",
+      contextPrecision: "96.5%",
+      faithfulness: "99.4%",
+      hallucinationRateMax: "<0.4%",
+      latencyP95: "1.1s",
+    };
+    summary = `Healthcare and clinical deployments enforce zero-hallucination tolerance (<0.4%) with real-time Presidio PHI de-identification and mandatory dual-clinician sign-off.`;
+  } else if (ind.includes("fintech") || ind.includes("bank") || name.includes("claim") || name.includes("fraud") || name.includes("loan")) {
+    standards = ["FINRA Rule 2210", "SEC Rule 206(4)-7", "PCI-DSS Level 1", "GLBA Privacy Framework", "EU AI Act High-Risk"];
+    sensitive = ["Primary Account Numbers (PAN / Credit Cards)", "Bank Routing & Account Numbers", "Taxpayer ID / SSN", "Credit Scores / FICO"];
+    approvedTools = ["Core Ledger Read-Only API", "Fraud Risk Scoring Engine", "OFAC Sanctions & AML Screening API"];
+    blockedTools = ["Unsupervised Wire Transfer Initiation", "Direct Credit Limit Modification", "Bypass 2FA / Authentication APIs"];
+    hitl = "Disbursements or settlement offers over $2,500 and automated loan denial decisions require Human Underwriter signoff.";
+    autonomy = "Conditional";
+    benchmark = "FinQA & SEC-10K Financial Dialectic Reasoning Golden Corpus";
+    targets = {
+      retrievalRecall: "96.8%",
+      retrievalMRR: "0.92",
+      contextPrecision: "94.5%",
+      faithfulness: "98.8%",
+      hallucinationRateMax: "<0.8%",
+      latencyP95: "1.2s",
+    };
+    summary = `Financial services governance enforces deterministic calculation checks, PCI-DSS token isolation, and automated supervisory oversight with human-in-the-loop gates.`;
+  } else if (ind.includes("legal") || name.includes("contract") || name.includes("law") || name.includes("compliance")) {
+    standards = ["ABA Model Rules of Professional Conduct (Rule 1.1/1.6)", "GDPR Art 22", "SOC 2 Type II Confidentiality"];
+    sensitive = ["Privileged Attorney-Client Communications", "Material Non-Public Information (MNPI)", "Trade Secrets", "Signatory Identities"];
+    approvedTools = ["DocuSign / Ironclad Contract Ingestion API", "Statutory Code Citation Cross-Referencer", "Clause Deviation Diff Engine"];
+    blockedTools = ["Direct Signature Execution without Counsel", "Public Webhook Broadcast", "External LLM Training Logging"];
+    hitl = "All material indemnification deviations, liability cap overrides, and court filing submissions require Partner / General Counsel approval.";
+    autonomy = "Bounded";
+    benchmark = "LegalBench & ContractNLI Multi-Jurisdiction Benchmark (8,200 labeled clauses)";
+    targets = {
+      retrievalRecall: "97.5%",
+      retrievalMRR: "0.93",
+      contextPrecision: "95.0%",
+      faithfulness: "99.0%",
+      hallucinationRateMax: "<0.6%",
+      latencyP95: "1.5s",
+    };
+    summary = `Legal AI governance requires clause-level citation verification, strict air-gapped tenant tenancy, and attorney-client privilege isolation.`;
+  }
+
+  return {
+    industryStandards: standards,
+    sensitiveDataEntities: sensitive,
+    toolAllowlistApproved: approvedTools,
+    toolAllowlistBlocked: blockedTools,
+    hitlApprovalThreshold: hitl,
+    autonomyLevel: autonomy,
+    goldenBenchmarkDataset: benchmark,
+    ragStageTargets: targets,
+    liveWebFindings: summary,
+    webSources: [
+      { title: "NIST AI Risk Management Framework (AI RMF 1.0)", uri: "https://www.nist.gov/itl/ai-risk-management-framework" },
+      { title: "OWASP Top 10 for Large Language Model Applications", uri: "https://owasp.org/www-project-top-10-for-large-language-model-applications" },
+      { title: "RAG Evaluation Metrics & Benchmarks Guide", uri: "https://arxiv.org/abs/2309.01431" },
     ],
   };
 }

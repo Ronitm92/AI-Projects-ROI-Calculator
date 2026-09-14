@@ -1,6 +1,7 @@
 import React from "react";
 import { CostBreakdown } from "../types";
 import { Server, Cpu, Database, Wrench, DollarSign } from "lucide-react";
+import { MODEL_COST_TIERS } from "../data/modelPricing";
 
 interface FinOpsCostBreakdownProps {
   costs: CostBreakdown;
@@ -39,8 +40,8 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
       amount: costs?.oneTimeDev ?? 0,
       type: "One-Time (Year 1)",
       icon: Cpu,
-      color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
-      description: "Architecture, prompt engineering, agent harness, safety guardrails, integration.",
+      badge: "bg-blue-100 text-blue-900 border-blue-300",
+      description: "Architecture, prompt pipelines, evaluation harnesses, security guardrails, and system integration.",
     },
     {
       id: "cost-tokens",
@@ -48,7 +49,7 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
       amount: costs?.annualTokens ?? 0,
       type: "Annual Recurring",
       icon: Server,
-      color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+      badge: "bg-blue-100 text-blue-900 border-blue-300",
       description: `${(safeMonthlyQueries * safeTeamSize * 12).toLocaleString()} queries/yr @ avg ${safeTokensPerQuery} tokens.`,
     },
     {
@@ -57,17 +58,17 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
       amount: costs?.annualInfra ?? 0,
       type: "Annual Recurring",
       icon: Database,
-      color: "text-purple-400 bg-purple-500/10 border-purple-500/20",
-      description: "Embeddings, vector indexing (Pinecone/Qdrant/pgvector), caching & API proxy.",
+      badge: "bg-blue-100 text-blue-900 border-blue-300",
+      description: "Vector indexing, embeddings, caching layer, and dedicated API gateway infrastructure.",
     },
     {
       id: "cost-ops",
-      label: "Observability & Human Ops",
+      label: "Observability & Maintenance",
       amount: costs?.annualMaintenance ?? 0,
       type: "Annual Recurring",
       icon: Wrench,
-      color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
-      description: "Tracing, latency monitoring, continuous prompt refinement, human-in-the-loop review.",
+      badge: "bg-blue-100 text-blue-900 border-blue-300",
+      description: "Tracing, latency monitoring, prompt iteration, and human-in-the-loop audit oversight.",
     },
   ];
 
@@ -77,23 +78,23 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
       : 0;
 
   return (
-    <div id="finops-costs-card" className="rounded-xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-800">
+    <div id="finops-costs-card" className="rounded-2xl border border-slate-300 bg-white p-5 sm:p-6 shadow-sm text-blue-950">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold text-white">AI FinOps & Total Cost of Ownership (TCO)</h3>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-mono">
+            <h3 className="text-base sm:text-lg font-bold text-blue-950">AI FinOps & Total Cost of Ownership (TCO)</h3>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-300 font-mono font-bold">
               ${costPerSeatMonth}/seat/mo
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Mavvrik true-cost model capturing hidden infrastructure, vector pipelines, and recurring maintenance.
+          <p className="text-xs text-blue-800 mt-1">
+            Engineering build, inference token consumption, vector storage, and continuous operations.
           </p>
         </div>
 
         <div className="text-right">
-          <div className="text-xs text-slate-400 font-medium">Year 1 Total AI Spend:</div>
-          <div className="text-lg font-bold font-mono text-rose-400">
+          <div className="text-xs text-blue-900 font-semibold">Year 1 Total AI Spend:</div>
+          <div className="text-xl font-bold font-mono text-blue-950">
             ${(costs?.totalFirstYearCost ?? 0).toLocaleString()}
           </div>
         </div>
@@ -107,29 +108,29 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
             <div
               key={item.id}
               id={item.id}
-              className="rounded-lg border border-slate-800 bg-slate-950/60 p-3.5 flex flex-col justify-between"
+              className="rounded-xl border border-slate-200 bg-slate-50 p-4 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className={`flex h-7 w-7 items-center justify-center rounded-md border ${item.color}`}>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-slate-300 text-blue-800 shadow-xs">
                       <Icon className="h-4 w-4" />
                     </div>
-                    <span className="text-xs font-semibold text-slate-200">
+                    <span className="text-xs font-bold text-blue-950">
                       {item.label}
                     </span>
                   </div>
-                  <span className="text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                  <span className={`text-[10px] uppercase font-mono font-bold tracking-wider px-2 py-0.5 rounded-md border ${item.badge}`}>
                     {item.type}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-2 line-clamp-2">
+                <p className="text-xs text-blue-800 mt-2 line-clamp-2">
                   {item.description}
                 </p>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-900 flex justify-between items-baseline">
-                <span className="text-[11px] text-slate-400">Modeled Cost:</span>
-                <span className="text-sm font-bold font-mono text-white">
+              <div className="mt-3 pt-2.5 border-t border-slate-200 flex justify-between items-baseline">
+                <span className="text-xs text-blue-900 font-medium">Modeled Cost:</span>
+                <span className="text-base font-bold font-mono text-blue-950">
                   ${(item.amount ?? 0).toLocaleString()}
                 </span>
               </div>
@@ -139,18 +140,18 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
       </div>
 
       {/* FinOps Granular Adjustments */}
-      <div className="mt-5 rounded-lg border border-slate-800/80 bg-slate-950/40 p-4">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-1.5">
-          <DollarSign className="w-3.5 h-3.5 text-indigo-400" />
-          FinOps Variable Controls
+      <div className="mt-5 rounded-xl border border-slate-300 bg-slate-50 p-4">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-blue-950 mb-3 flex items-center gap-1.5">
+          <DollarSign className="w-4 h-4 text-blue-700" />
+          FinOps Cost Parameters
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
           {/* Upfront Dev */}
           <div>
-            <div className="flex justify-between text-slate-300 font-medium mb-1">
-              <span>Upfront Dev/Evals:</span>
-              <span className="font-mono text-indigo-300">${safeOneTimeDev.toLocaleString()}</span>
+            <div className="flex justify-between text-blue-950 font-semibold mb-1.5">
+              <span>Upfront Build/Evals:</span>
+              <span className="font-mono font-bold text-blue-900">${safeOneTimeDev.toLocaleString()}</span>
             </div>
             <input
               type="range"
@@ -160,15 +161,15 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
               step="5000"
               value={safeOneTimeDev}
               onChange={(e) => onUpdateCostParam("oneTimeDevCost", Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
           {/* Monthly Queries / User */}
           <div>
-            <div className="flex justify-between text-slate-300 font-medium mb-1">
+            <div className="flex justify-between text-blue-950 font-semibold mb-1.5">
               <span>Queries/User/Mo:</span>
-              <span className="font-mono text-cyan-300">{safeMonthlyQueries}</span>
+              <span className="font-mono font-bold text-blue-900">{safeMonthlyQueries}</span>
             </div>
             <input
               type="range"
@@ -178,15 +179,15 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
               step="50"
               value={safeMonthlyQueries}
               onChange={(e) => onUpdateCostParam("monthlyQueriesPerUser", Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
           {/* Avg Tokens / Query */}
           <div>
-            <div className="flex justify-between text-slate-300 font-medium mb-1">
+            <div className="flex justify-between text-blue-950 font-semibold mb-1.5">
               <span>Avg Tokens/Query:</span>
-              <span className="font-mono text-cyan-300">{safeTokensPerQuery} tokens</span>
+              <span className="font-mono font-bold text-blue-900">{safeTokensPerQuery}</span>
             </div>
             <input
               type="range"
@@ -196,15 +197,15 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
               step="100"
               value={safeTokensPerQuery}
               onChange={(e) => onUpdateCostParam("avgTokensPerQuery", Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
           {/* Token Price / 1M */}
           <div>
-            <div className="flex justify-between text-slate-300 font-medium mb-1">
-              <span>Model Price/1M:</span>
-              <span className="font-mono text-cyan-300">${(tokenCostPerMillion ?? 0.6).toFixed(2)}</span>
+            <div className="flex justify-between text-blue-950 font-semibold mb-1.5">
+              <span>Model Price / 1M Tokens:</span>
+              <span className="font-mono font-bold text-blue-900">${(tokenCostPerMillion ?? 0.6).toFixed(2)}</span>
             </div>
             <input
               type="range"
@@ -214,15 +215,37 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
               step="0.05"
               value={tokenCostPerMillion ?? 0.6}
               onChange={(e) => onUpdateCostParam("tokenCostPerMillion", Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
             />
+            <div className="grid grid-cols-2 gap-1.5 mt-2">
+              {MODEL_COST_TIERS.map((tier) => {
+                const isSelected = Math.abs((tokenCostPerMillion ?? 0.6) - tier.costPerMillion) < 0.05;
+                return (
+                  <button
+                    key={tier.id}
+                    type="button"
+                    onClick={() => onUpdateCostParam("tokenCostPerMillion", tier.costPerMillion)}
+                    className={`py-1 px-1.5 rounded-lg border text-left text-[10px] font-bold transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-blue-800 text-white border-blue-900"
+                        : "bg-white text-blue-900 border-slate-300 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="truncate">{tier.name.split(" ")[0]}</span>
+                      <span className="font-mono font-extrabold">${tier.costPerMillion.toFixed(2)}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Annual Vector DB & Infra */}
           <div>
-            <div className="flex justify-between text-slate-300 font-medium mb-1">
+            <div className="flex justify-between text-blue-950 font-semibold mb-1.5">
               <span>Vector DB & Infra/Yr:</span>
-              <span className="font-mono text-purple-300">${safeInfraCost.toLocaleString()}</span>
+              <span className="font-mono font-bold text-blue-900">${safeInfraCost.toLocaleString()}</span>
             </div>
             <input
               type="range"
@@ -232,15 +255,15 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
               step="500"
               value={safeInfraCost}
               onChange={(e) => onUpdateCostParam("annualInfraCost", Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
           {/* Annual Maintenance */}
           <div>
-            <div className="flex justify-between text-slate-300 font-medium mb-1">
+            <div className="flex justify-between text-blue-950 font-semibold mb-1.5">
               <span>Ops & Maintenance/Yr:</span>
-              <span className="font-mono text-amber-300">${safeMaintCost.toLocaleString()}</span>
+              <span className="font-mono font-bold text-blue-900">${safeMaintCost.toLocaleString()}</span>
             </div>
             <input
               type="range"
@@ -250,7 +273,7 @@ export const FinOpsCostBreakdown: React.FC<FinOpsCostBreakdownProps> = ({
               step="1000"
               value={safeMaintCost}
               onChange={(e) => onUpdateCostParam("annualMaintenanceCost", Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
             />
           </div>
         </div>

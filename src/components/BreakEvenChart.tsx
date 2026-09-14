@@ -71,32 +71,32 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
     : null;
 
   return (
-    <div id="break-even-chart-card" className="rounded-xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-sm">
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+    <div id="break-even-chart-card" className="rounded-2xl border border-slate-300 bg-white p-5 sm:p-6 shadow-sm text-blue-950">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold text-white">Cumulative Cash Flow & Break-Even Timeline</h3>
-            <span className="flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">
-              <TrendingUp className="w-3 h-3" />
+            <h3 className="text-base sm:text-lg font-bold text-blue-950">Cumulative Cash Flow & Break-Even Timeline</h3>
+            <span className="flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-300 font-bold">
+              <TrendingUp className="w-3.5 h-3.5 text-blue-700" />
               Payback in {effectivePayback} {effectivePayback === 1 ? "month" : "months"}
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
-            Models S-curve organizational adoption ramp and ongoing AI infrastructure operational spend.
+          <p className="text-xs text-blue-800 mt-1">
+            Models S-curve organizational adoption ramp against cumulative upfront build and operational FinOps spend.
           </p>
         </div>
 
         {/* Horizon selector */}
-        <div className="flex items-center gap-1 rounded-lg bg-slate-950 p-1 border border-slate-800">
+        <div className="flex items-center gap-1.5 rounded-xl bg-slate-100 p-1 border border-slate-300">
           {([12, 24, 36] as const).map((h) => (
             <button
               key={h}
               id={`horizon-btn-${h}`}
               onClick={() => setHorizon(h)}
-              className={`rounded px-2.5 py-1 text-xs font-medium transition-all ${
+              className={`rounded-lg px-3 py-1 text-xs font-bold transition-all cursor-pointer ${
                 horizon === h
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-blue-800 text-white shadow-sm"
+                  : "text-blue-900 hover:bg-slate-200"
               }`}
             >
               {h}M
@@ -114,12 +114,12 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
         >
           <defs>
             <linearGradient id="benefitGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#2563eb" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#2563eb" stopOpacity="0.0" />
             </linearGradient>
             <linearGradient id="costGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#f43f5e" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#e11d48" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#e11d48" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -134,7 +134,7 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
                   y1={y}
                   x2={width - padding.right}
                   y2={y}
-                  stroke="#1e293b"
+                  stroke="#e2e8f0"
                   strokeDasharray="4 4"
                   strokeWidth="1"
                 />
@@ -142,9 +142,9 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
                   x={padding.left - 10}
                   y={y + 4}
                   textAnchor="end"
-                  className="fill-slate-400 text-[10px] font-mono"
+                  className="fill-slate-500 text-[10px] font-mono font-medium"
                 >
-                  ${(val / 1000).toFixed(0)}k
+                  ${(((val ?? 0) / 1000)).toFixed(0)}k
                 </text>
               </g>
             );
@@ -161,7 +161,7 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
                   x={x}
                   y={height - 15}
                   textAnchor="middle"
-                  className="fill-slate-400 text-[10px] font-mono"
+                  className="fill-slate-600 text-[10px] font-mono font-medium"
                 >
                   M{p.month}
                 </text>
@@ -169,12 +169,12 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
             })}
 
           {/* Lines */}
-          {/* Cumulative Benefit Line (Emerald) */}
+          {/* Cumulative Benefit Line (Blue) */}
           <path
             d={benefitPath}
             fill="none"
-            stroke="#10b981"
-            strokeWidth="2.5"
+            stroke="#1d4ed8"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -183,7 +183,7 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
           <path
             d={costPath}
             fill="none"
-            stroke="#f43f5e"
+            stroke="#e11d48"
             strokeWidth="2"
             strokeDasharray="6 3"
             strokeLinecap="round"
@@ -193,34 +193,35 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
           {/* Break-even beacon */}
           {breakEvenPoint && (
             <g transform={`translate(${getX(breakEvenPoint.month)}, ${getY(breakEvenPoint.cumulativeBenefit)})`}>
-              <circle r="12" fill="#10b981" fillOpacity="0.2" className="animate-pulse" />
-              <circle r="6" fill="#10b981" stroke="#0f172a" strokeWidth="2" />
+              <circle r="12" fill="#1d4ed8" fillOpacity="0.2" className="animate-pulse" />
+              <circle r="6" fill="#1d4ed8" stroke="#ffffff" strokeWidth="2" />
               <line
                 x1="0"
                 y1="10"
                 x2="0"
                 y2={innerHeight - getY(breakEvenPoint.cumulativeBenefit) + padding.top}
-                stroke="#10b981"
+                stroke="#1d4ed8"
                 strokeDasharray="2 2"
                 strokeWidth="1"
               />
               <rect
-                x="-45"
+                x="-48"
                 y="-32"
-                width="90"
+                width="96"
                 height="22"
-                rx="4"
-                fill="#0f172a"
-                stroke="#10b981"
-                strokeWidth="1"
+                rx="6"
+                fill="#ffffff"
+                stroke="#1d4ed8"
+                strokeWidth="1.5"
+                className="shadow-sm"
               />
               <text
                 x="0"
-                y="-18"
+                y="-17"
                 textAnchor="middle"
-                className="fill-emerald-400 text-[9px] font-semibold tracking-wider font-mono"
+                className="fill-blue-950 text-[9px] font-bold tracking-wider font-mono"
               >
-                BREAK-EVEN: M{breakEvenPoint.month}
+                PAYBACK: M{breakEvenPoint.month}
               </text>
             </g>
           )}
@@ -250,7 +251,7 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
                 y1={padding.top}
                 x2={getX(hoveredData.month)}
                 y2={padding.top + innerHeight}
-                stroke="#6366f1"
+                stroke="#1d4ed8"
                 strokeWidth="1.5"
                 strokeDasharray="3 3"
               />
@@ -258,13 +259,17 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
                 cx={getX(hoveredData.month)}
                 cy={getY(hoveredData.cumulativeBenefit)}
                 r="4"
-                fill="#10b981"
+                fill="#1d4ed8"
+                stroke="#ffffff"
+                strokeWidth="1.5"
               />
               <circle
                 cx={getX(hoveredData.month)}
                 cy={getY(hoveredData.cumulativeCost)}
                 r="4"
-                fill="#f43f5e"
+                fill="#e11d48"
+                stroke="#ffffff"
+                strokeWidth="1.5"
               />
             </g>
           )}
@@ -273,47 +278,47 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
         {/* Floating details badge if hovering */}
         {hoveredData && (
           <div
-            className="pointer-events-none absolute top-4 right-4 rounded-lg border border-slate-700 bg-slate-950/90 p-3 shadow-xl backdrop-blur-md text-xs font-mono"
-            style={{ minWidth: "170px" }}
+            className="pointer-events-none absolute top-4 right-4 rounded-xl border border-slate-300 bg-white/95 p-3.5 shadow-xl backdrop-blur-md text-xs font-mono"
+            style={{ minWidth: "180px" }}
           >
-            <div className="font-semibold text-slate-300 pb-1 border-b border-slate-800 flex justify-between items-center">
-              <span>Month {hoveredData.month} Status</span>
+            <div className="font-bold text-blue-950 pb-1.5 border-b border-slate-200 flex justify-between items-center">
+              <span>Month {hoveredData.month}</span>
               {hoveredData.isBreakEven ? (
-                <span className="text-[10px] text-emerald-400 flex items-center gap-1 font-sans">
+                <span className="text-[10px] text-emerald-700 flex items-center gap-1 font-sans font-bold">
                   <CheckCircle2 className="w-3 h-3" /> Profitable
                 </span>
               ) : (
-                <span className="text-[10px] text-amber-400 flex items-center gap-1 font-sans">
+                <span className="text-[10px] text-amber-700 flex items-center gap-1 font-sans font-bold">
                   <AlertCircle className="w-3 h-3" /> Amortizing
                 </span>
               )}
             </div>
             <div className="mt-2 space-y-1">
-              <div className="flex justify-between text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+              <div className="flex justify-between text-blue-900">
+                <span className="flex items-center gap-1.5 font-sans font-medium">
+                  <span className="w-2 h-2 rounded-full bg-blue-700 inline-block" />
                   Benefit:
                 </span>
-                <span className="text-emerald-300 font-medium">
+                <span className="text-blue-950 font-bold">
                   ${(hoveredData.cumulativeBenefit ?? 0).toLocaleString()}
                 </span>
               </div>
-              <div className="flex justify-between text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-rose-500 inline-block" />
+              <div className="flex justify-between text-blue-900">
+                <span className="flex items-center gap-1.5 font-sans font-medium">
+                  <span className="w-2 h-2 rounded-full bg-rose-600 inline-block" />
                   Cost:
                 </span>
-                <span className="text-rose-300 font-medium">
+                <span className="text-rose-700 font-bold">
                   ${(hoveredData.cumulativeCost ?? 0).toLocaleString()}
                 </span>
               </div>
-              <div className="flex justify-between pt-1 border-t border-slate-800/80 font-bold">
-                <span className="text-slate-300">Net Flow:</span>
+              <div className="flex justify-between pt-1.5 border-t border-slate-200 font-bold">
+                <span className="text-blue-950 font-sans">Net Cash:</span>
                 <span
                   className={
                     (hoveredData.netCashFlow ?? 0) >= 0
-                      ? "text-emerald-400"
-                      : "text-rose-400"
+                      ? "text-emerald-700 font-bold"
+                      : "text-rose-700 font-bold"
                   }
                 >
                   {(hoveredData.netCashFlow ?? 0) >= 0 ? "+" : ""}$
@@ -326,20 +331,20 @@ export const BreakEvenChart: React.FC<BreakEvenChartProps> = ({
       </div>
 
       {/* Legend & Summary */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/70 text-xs">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200 text-xs">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-4 rounded-full bg-emerald-500" />
-            <span className="text-slate-300">Cumulative Value (5 Streams)</span>
+            <span className="h-2.5 w-5 rounded-full bg-blue-700" />
+            <span className="text-blue-950 font-semibold">Cumulative Value (5 Streams)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-0.5 w-4 border-b-2 border-dashed border-rose-500" />
-            <span className="text-slate-300">Cumulative TCO (Dev + Infra + FinOps)</span>
+            <span className="h-0.5 w-5 border-b-2 border-dashed border-rose-600" />
+            <span className="text-blue-950 font-semibold">Cumulative TCO (Build + FinOps)</span>
           </div>
         </div>
 
-        <div className="text-slate-400">
-          Tip: Hover across points to inspect monthly cash balance.
+        <div className="text-blue-800 font-medium">
+          Hover across points to inspect monthly cash flow balance.
         </div>
       </div>
     </div>

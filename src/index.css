@@ -3,15 +3,17 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #e2e8f0;
+    color: #172554;
   }
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', monospace;
   }
 }
 
-/* Custom modern range sliders */
+/* Custom modern range sliders in corporate blue */
 input[type="range"] {
-  accent-color: #6366f1;
+  accent-color: #1e40af;
 }
 
 /* Crisp custom scrollbar */
@@ -20,12 +22,12 @@ input[type="range"] {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #cbd5e1;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #94a3b8;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #64748b;
 }

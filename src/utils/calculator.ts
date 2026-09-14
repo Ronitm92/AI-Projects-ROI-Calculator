@@ -437,6 +437,7 @@ export function calculateRoi(inputs: CalculatorInputs): CalculationResults {
     costToValueRatio,
     annualCostPerSeat,
     annualValuePerSeat,
+    costPerQuery: unitCostPerQuery,
     financialFluency,
     timeline,
     fiveYearProjections,

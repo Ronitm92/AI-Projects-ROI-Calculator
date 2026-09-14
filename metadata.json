@@ -1,6 +1,6 @@
 {
   "name": "AI Feature ROI Calculator",
-  "description": "Executive-level AI feature and project ROI calculator implementing strategic financial fluency frameworks with dynamic multi-stakeholder inputs (PM, Eng, CFO), NPV, IRR, 5-Year TCO, enterprise P&L impact, and downloadable 5-tab Excel models.",
+  "description": "Executive-level AI feature and project ROI calculator implementing strategic financial fluency frameworks with dynamic multi-stakeholder inputs (PM, Eng, CFO), Enterprise RAG Evaluation, Top 8 AI Agent Guardrails governance, NPV, IRR, 5-Year TCO, enterprise P&L impact, and downloadable 6-tab Excel models.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

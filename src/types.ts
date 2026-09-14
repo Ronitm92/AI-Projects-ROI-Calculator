@@ -71,6 +71,52 @@ export interface PresetArchetype {
 }
 
 // Multi-stakeholder input model
+export interface GuardrailItemSpec {
+  id: number;
+  step: string;
+  title: string;
+  tagline: string;
+  projectRule: string;
+  enforcementStandard: string;
+  riskLevel: "Critical" | "High" | "Moderate" | "Standard";
+  status: string;
+  decisionLogic: string;
+}
+
+export interface RagStageSpec {
+  stageNumber: string;
+  name: string;
+  subtitle: string;
+  question: string;
+  targetBenchmark: string;
+  keyMetrics: Array<{
+    name: string;
+    target: string;
+    description: string;
+  }>;
+}
+
+export interface GuardrailsEvalSpecs {
+  industryStandards: string[];
+  sensitiveDataEntities: string[];
+  toolAllowlistApproved: string[];
+  toolAllowlistBlocked: string[];
+  hitlApprovalThreshold: string;
+  autonomyLevel: "Assist" | "Bounded" | "Conditional" | "Full";
+  goldenBenchmarkDataset: string;
+  ragStageTargets: {
+    retrievalRecall: string;
+    retrievalMRR: string;
+    contextPrecision: string;
+    faithfulness: string;
+    hallucinationRateMax: string;
+    latencyP95: string;
+  };
+  liveWebFindings?: string;
+  webSources?: Array<{ title: string; uri: string }>;
+  lastResearchedAt?: string;
+}
+
 export interface CalculatorInputs {
   featureName: string;
   featureDescription?: string;
@@ -114,6 +160,9 @@ export interface CalculatorInputs {
     learningUpskilling: number;
     retentionWellbeing: number;
   };
+
+  // Dynamic Evaluation & Guardrails Governance (Researched / Configured)
+  guardrailsEvalSpecs?: GuardrailsEvalSpecs;
 }
 
 export interface StreamBreakdown {
@@ -214,6 +263,7 @@ export interface CalculationResults {
   // Per-User Economics
   annualCostPerSeat: number;
   annualValuePerSeat: number;
+  costPerQuery: number;
 
   // Advanced Financial Fluency (from attached PDF)
   financialFluency: FinancialFluencyResults;

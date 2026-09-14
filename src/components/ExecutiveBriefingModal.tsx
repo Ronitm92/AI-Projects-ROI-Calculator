@@ -102,22 +102,22 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
       <div
         id="executive-briefing-modal"
-        className="relative flex flex-col w-full max-w-3xl max-h-[90vh] rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden"
+        className="relative flex flex-col w-full max-w-3xl max-h-[90vh] rounded-2xl border border-slate-300 bg-white text-blue-950 shadow-2xl overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-950/70">
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-blue-800 border border-blue-300">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-white">
+              <h3 className="text-base sm:text-lg font-bold text-blue-950">
                 Executive Investment Briefing & CFO One-Pager
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-blue-800">
                 Synthesized business memo ready for VP of Product and CFO review.
               </p>
             </div>
@@ -127,7 +127,7 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
             <button
               onClick={generateBriefing}
               disabled={isLoading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-xs font-medium text-slate-200 hover:bg-slate-700 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-xs font-bold text-blue-900 hover:bg-slate-100 disabled:opacity-50 transition-colors cursor-pointer"
               title="Regenerate memo"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
@@ -136,7 +136,7 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-blue-950 hover:bg-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -144,58 +144,58 @@ export const ExecutiveBriefingModal: React.FC<ExecutiveBriefingModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 text-slate-200 font-sans text-sm leading-relaxed">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 text-blue-950 font-sans text-sm leading-relaxed">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-              <div className="w-10 h-10 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm font-medium text-slate-300">
+              <div className="w-10 h-10 border-2 border-blue-700 border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm font-bold text-blue-950">
                 Drafting defensible executive memo with Gemini...
               </p>
-              <p className="text-xs text-slate-400 max-w-sm">
-                Evaluating {industryName} cost-to-value benchmarks and risk mitigation parameters.
+              <p className="text-xs text-blue-800 max-w-sm">
+                Evaluating {industryName} cost-to-value benchmarks and risk parameters.
               </p>
             </div>
           ) : error ? (
-            <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-rose-300 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div className="rounded-xl border border-rose-300 bg-rose-50 p-4 text-rose-800 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-600" />
               <div className="text-xs">
-                <p className="font-semibold">Unable to generate live AI briefing</p>
+                <p className="font-bold">Unable to generate live AI briefing</p>
                 <p className="mt-1">{error}</p>
                 <button
                   onClick={generateBriefing}
-                  className="mt-2 px-3 py-1 bg-rose-500/20 rounded border border-rose-500/30 text-white hover:bg-rose-500/30 font-medium"
+                  className="mt-2 px-3 py-1 bg-rose-100 rounded-lg border border-rose-300 text-rose-900 hover:bg-rose-200 font-bold cursor-pointer"
                 >
                   Retry
                 </button>
               </div>
             </div>
           ) : (
-            <div className="prose prose-invert max-w-none prose-headings:text-white prose-p:text-slate-300 prose-li:text-slate-300 prose-strong:text-indigo-300 whitespace-pre-line font-sans text-xs sm:text-sm">
+            <div className="max-w-none text-blue-950 whitespace-pre-line font-sans text-xs sm:text-sm leading-relaxed bg-slate-50 p-5 rounded-xl border border-slate-200">
               {briefingText}
             </div>
           )}
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between p-4 border-t border-slate-800 bg-slate-950/70">
-          <div className="text-xs text-slate-400 font-mono">
-            Modeled: {inputs.scenario.toUpperCase()} | Net ROI: {results.firstYearNetRoi}%
+        <div className="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50">
+          <div className="text-xs text-blue-900 font-mono font-bold">
+            Scenario: {inputs.scenario.toUpperCase()} | Net ROI: {results.firstYearNetRoi}%
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
               disabled={isLoading || !briefingText}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-bold text-blue-900 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-3.5 h-3.5 text-blue-700" />
               Print / Save PDF
             </button>
 
             <button
               onClick={handleCopy}
               disabled={isLoading || !briefingText}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-medium text-white shadow-md shadow-indigo-600/20 transition-all disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-blue-800 hover:bg-blue-700 text-xs font-bold text-white shadow-sm transition-all disabled:opacity-50 cursor-pointer"
             >
               {copied ? (
                 <>

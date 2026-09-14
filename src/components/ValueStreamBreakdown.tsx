@@ -83,82 +83,77 @@ export const ValueStreamBreakdown: React.FC<ValueStreamBreakdownProps> = ({
       value: safeBenefits.directProductivity,
       weight: safeWeights.directProductivity,
       icon: Zap,
-      color: "from-blue-500 to-indigo-500",
-      barBg: "bg-blue-500",
-      textColor: "text-blue-400",
-      description: "Hours saved from routine labor, summarization, query answering, and automated ticket triage.",
+      barBg: "bg-blue-600",
+      textColor: "text-blue-700",
+      description: "Hours saved from routine manual workflows, synthesis, document triage, and automated routing.",
     },
     {
       key: "qualityImprovement" as const,
-      name: "Quality & Error Reduction",
+      name: "Quality & Defect Prevention",
       value: safeBenefits.qualityImprovement,
       weight: safeWeights.qualityImprovement,
       icon: ShieldCheck,
-      color: "from-emerald-500 to-teal-500",
-      barBg: "bg-emerald-500",
-      textColor: "text-emerald-400",
-      description: "Prevention of costly rework, bug fixes, defect escapes, and escalations via automated validation.",
+      barBg: "bg-emerald-600",
+      textColor: "text-emerald-700",
+      description: "Prevention of costly rework, defect escapes, and customer escalations via automated verification.",
     },
     {
       key: "innovationVelocity" as const,
-      name: "Innovation & Velocity",
+      name: "Innovation & Cycle Time",
       value: safeBenefits.innovationVelocity,
       weight: safeWeights.innovationVelocity,
       icon: Rocket,
-      color: "from-purple-500 to-pink-500",
-      barBg: "bg-purple-500",
-      textColor: "text-purple-400",
-      description: "Faster time-to-market for revenue-generating features, rapid experimentation, and unlocked capacity.",
+      barBg: "bg-indigo-600",
+      textColor: "text-indigo-700",
+      description: "Accelerated time-to-market for revenue initiatives and unlocked organizational bandwidth.",
     },
     {
       key: "learningUpskilling" as const,
-      name: "Knowledge & Learning",
+      name: "Knowledge & Onboarding",
       value: safeBenefits.learningUpskilling,
       weight: safeWeights.learningUpskilling,
       icon: GraduationCap,
-      color: "from-amber-500 to-orange-500",
-      barBg: "bg-amber-500",
-      textColor: "text-amber-400",
-      description: "Accelerated employee onboarding, reduced dependency on senior staff, and instant context retrieval.",
+      barBg: "bg-amber-600",
+      textColor: "text-amber-700",
+      description: "Accelerated employee ramp time, reduced dependency on key experts, and context retrieval.",
     },
     {
       key: "retentionWellbeing" as const,
-      name: "Wellbeing & Retention",
+      name: "Retention & Organizational Health",
       value: safeBenefits.retentionWellbeing,
       weight: safeWeights.retentionWellbeing,
       icon: Heart,
-      color: "from-rose-500 to-red-500",
-      barBg: "bg-rose-500",
-      textColor: "text-rose-400",
-      description: "Cognitive relief from soul-crushing repetitive work, reduced burnout, and lower costly employee turnover.",
+      barBg: "bg-slate-600",
+      textColor: "text-slate-700",
+      description: "Mitigation of repetitive manual fatigue, burnout reduction, and lower key talent replacement costs.",
     },
   ];
 
   const totalBenefit = safeBenefits.totalAnnualBenefit || 1;
 
   return (
-    <div id="value-streams-card" className="rounded-xl border border-slate-800 bg-slate-900/80 p-5 backdrop-blur-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-800">
+    <div id="value-streams-card" className="rounded-2xl border border-slate-300 bg-white p-5 sm:p-6 shadow-sm text-blue-950">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
         <div>
-          <h3 className="text-base font-semibold text-white">AI4SP 5-Value Stream Breakdown</h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Holistic value translation beyond naive 1:1 time savings. Adjust weights to match organizational priorities.
+          <h3 className="text-base sm:text-lg font-bold text-blue-950">5-Value Stream Financial Breakdown</h3>
+          <p className="text-xs text-blue-800 mt-1">
+            Multidimensional value allocation across direct time release, quality control, velocity, and retention.
           </p>
         </div>
         <button
           onClick={handleReset}
           id="reset-weights-btn"
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors px-2.5 py-1 rounded-md border border-slate-800 hover:border-slate-700 bg-slate-950"
-          title="Reset to selected industry benchmarks"
+          className="flex items-center gap-1.5 text-xs text-blue-900 hover:text-blue-950 font-bold transition-all px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-100 hover:bg-slate-200 cursor-pointer"
+          title="Reset to benchmark weights"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          Reset to Industry Default
+          <span>Reset Benchmarks</span>
         </button>
       </div>
 
       {/* Stacked Proportional Bar */}
       <div className="mt-4">
-        <div className="h-3.5 w-full rounded-full bg-slate-950 overflow-hidden flex border border-slate-800">
+        <div className="h-4 w-full rounded-full bg-slate-100 overflow-hidden flex border border-slate-300">
           {streams.map((s) => {
             const pct = Math.round((s.value / totalBenefit) * 100);
             if (pct <= 0) return null;
@@ -166,7 +161,7 @@ export const ValueStreamBreakdown: React.FC<ValueStreamBreakdownProps> = ({
               <div
                 key={s.key}
                 style={{ width: `${(s.value / totalBenefit) * 100}%` }}
-                className={`h-full ${s.barBg} transition-all duration-300 relative group`}
+                className={`h-full ${s.barBg} transition-all duration-300 relative`}
                 title={`${s.name}: $${(s.value ?? 0).toLocaleString()} (${pct}%)`}
               />
             );
@@ -175,7 +170,7 @@ export const ValueStreamBreakdown: React.FC<ValueStreamBreakdownProps> = ({
       </div>
 
       {/* Stream Cards Grid */}
-      <div className="mt-5 space-y-3.5">
+      <div className="mt-5 space-y-3">
         {streams.map((stream) => {
           const pct = Math.round(((stream.value ?? 0) / totalBenefit) * 100);
           const Icon = stream.icon;
@@ -184,36 +179,36 @@ export const ValueStreamBreakdown: React.FC<ValueStreamBreakdownProps> = ({
             <div
               key={stream.key}
               id={`stream-${stream.key}`}
-              className="rounded-lg border border-slate-800/80 bg-slate-950/60 p-3.5 transition-colors hover:border-slate-700"
+              className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 transition-all hover:border-slate-300"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-900 border border-slate-800 ${stream.textColor}`}>
+                  <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white border border-slate-300 ${stream.textColor} shadow-xs`}>
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-slate-200 truncate">
+                    <h4 className="text-xs sm:text-sm font-bold text-blue-950 truncate">
                       {stream.name}
                     </h4>
-                    <p className="text-[11px] text-slate-400 line-clamp-1">
+                    <p className="text-[11px] text-blue-800 line-clamp-1">
                       {stream.description}
                     </p>
                   </div>
                 </div>
 
                 <div className="text-right shrink-0">
-                  <div className="text-sm font-semibold font-mono text-white">
+                  <div className="text-sm font-bold font-mono text-blue-950">
                     ${(stream.value ?? 0).toLocaleString()}
                   </div>
-                  <div className="text-[11px] font-mono text-slate-400">
+                  <div className="text-[11px] font-mono text-blue-800 font-semibold">
                     {pct}% of annual value
                   </div>
                 </div>
               </div>
 
               {/* Slider for stream weight */}
-              <div className="mt-3 flex items-center gap-3 pt-2 border-t border-slate-900">
-                <span className="text-[11px] font-mono text-slate-400 w-16">
+              <div className="mt-3 flex items-center gap-3 pt-2.5 border-t border-slate-200">
+                <span className="text-xs font-mono font-bold text-blue-950 w-24">
                   Weight: {stream.weight}%
                 </span>
                 <input
@@ -224,7 +219,7 @@ export const ValueStreamBreakdown: React.FC<ValueStreamBreakdownProps> = ({
                   step="5"
                   value={stream.weight}
                   onChange={(e) => handleWeightChange(stream.key, Number(e.target.value))}
-                  className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-1.5 bg-slate-300 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
             </div>
@@ -232,9 +227,9 @@ export const ValueStreamBreakdown: React.FC<ValueStreamBreakdownProps> = ({
         })}
       </div>
 
-      <div className="mt-4 flex items-center justify-between pt-3 border-t border-slate-800/80 text-xs">
-        <span className="text-slate-400 font-medium">Total 1st-Year Annual Value:</span>
-        <span className="text-emerald-400 font-bold font-mono text-sm">
+      <div className="mt-4 flex items-center justify-between pt-3 border-t border-slate-200 text-xs">
+        <span className="text-blue-950 font-bold">Total Modeled 1st-Year Value:</span>
+        <span className="text-emerald-700 font-bold font-mono text-base">
           ${(safeBenefits.totalAnnualBenefit ?? 0).toLocaleString()}
         </span>
       </div>

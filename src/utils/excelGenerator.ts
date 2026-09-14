@@ -490,6 +490,46 @@ export function generateExecutiveExcelWorkbook(
   const wsUnit = XLSX.utils.aoa_to_sheet(unitEconomicsData);
   XLSX.utils.book_append_sheet(wb, wsUnit, "Unit Economics & FinOps");
 
+  // ==========================================
+  // TAB 6: AI AGENT GUARDRAILS & RAG EVALUATION
+  // ==========================================
+  const evalGuardrailsData = [
+    ["ENTERPRISE AI EVALUATION & AGENT GUARDRAILS GOVERNANCE"],
+    ["Project Name:", inputs?.featureName || "AI Initiative"],
+    ["Architecture Type:", inputs?.architectureType || "RAG Agent"],
+    ["Evidence Gate Threshold:", inputs?.evidenceGate || "Staging Evaluation Verification"],
+    ["Executive Accountable Officer:", inputs?.executiveOwner || "VP Product & Tech"],
+    [],
+    ["PART 1: TOP 8 AI AGENT GUARDRAILS AUDIT (SAFER AGENTS, HIGHER TRUST)"],
+    ["Guardrail #", "Guardrail Domain", "Enforcement Rule", "Decision Logic", "Compliance Status"],
+    ["01", "Identity & Access", "Give every agent a unique identity with least-privilege access only.", "RBAC Check -> Yes: Granted / No: Denied", "ENFORCED (Least-Privilege)"],
+    ["02", "Data Sensitivity & Redaction", "Classify sensitive data in real time, then mask it automatically.", "Sensitive? -> Yes: Mask/Redact / No: Pass Through", "ACTIVE FILTER (Zero PII Leakage)"],
+    ["03", "Tool-Use & API Allowlist", "Restrict every agent to an explicit allowlist of approved tools.", "On Allowlist? -> Yes: Execute / No: Blocked", "ALLOWLIST STRICT (WASM Sandbox)"],
+    ["04", "Input & Prompt-Injection", "Screen every prompt and retrieved document for injection before execution.", "Injection Scan -> Clean: Proceed / Flagged: Reject", "SCANNING 100% (OWASP Top 10)"],
+    ["05", "Action Authorization (HITL)", "Require human approval before any irreversible or high-impact action runs.", "High-Impact? -> Yes: Human Approval / No: Auto-Execute", "HITL ACTIVE (Dual-Key Approval)"],
+    ["06", "Autonomy-Level Governance", "Match autonomy level to task risk, from assistive to full.", "Risk Score -> Assist / Bounded / Conditional / Full", "LEVEL 2 (Bounded Sandbox)"],
+    ["07", "Output & Hallucination Filter", "Ground every output in facts, then filter it before delivery.", "Grounded? -> Yes: Deliver / No: Regenerate or Escalate", "NLI GROUNDING (Hallucination <1.5%)"],
+    ["08", "Observability & Continuous Audit", "Log every action and flag anomalies for continuous compliance auditing.", "Anomaly? -> Yes: Alert / No: Immutable Audit Trail", "STREAM LIVE (OpenTelemetry / WORM)"],
+    [],
+    ["PART 2: ENTERPRISE RAG EVALUATION FRAMEWORK (4 ARCHITECTURAL STAGES)"],
+    ["Stage #", "Pipeline Stage", "Core Guiding Question", "Key Evaluation Metrics", "Target SLA Gate"],
+    ["1", "Retrieval", "Did we find the right evidence?", "Recall@K, Precision@K, Hit Rate, MRR, NDCG", "Recall@K >90.0%, MRR >0.80"],
+    ["2", "RAG Augmentation", "Did we use the evidence correctly?", "Context Precision, Context Recall, Faithfulness, Groundedness, Citation Correctness", "Faithfulness >94.0%, Groundedness >92.0%"],
+    ["3", "Generation", "Did we produce the right answer?", "Hallucination Rate, Completeness, Correctness, Semantic Similarity, Instruction Adherence", "Hallucination <2.0%, Correctness >92.0%"],
+    ["4", "Production Operations", "Did we do it reliably, quickly, and cost-effectively?", "P50/P95/P99 Latency, System Throughput, Tokens/Query, Cost/Query, Error Rate", "P95 Latency <1.5s, Error Rate <0.5%"],
+    [],
+    ["PART 3: 5 COMPLEMENTARY EVALUATION APPROACHES"],
+    ["Approach", "Methodology", "Coverage & Cadence"],
+    ["Golden Dataset", "Curated Q&A pairs with verified ground truth", "100% Core Scenarios"],
+    ["Human Evaluation", "Expert domain review for nuance, tone, and edge-cases", "5% Statistical Random Sample"],
+    ["LLM-as-a-Judge", "Scalable, consistent rubric scoring with Gemini / SOTA judges", "Continuous 100% Eval"],
+    ["RAGAS / DeepEval", "Purpose-built mathematical triads (faithfulness, recall)", "Automated CI/CD Gates"],
+    ["A/B Testing", "Champion/Challenger canary routing with live cohorts", "Staged Production Canary"],
+  ];
+
+  const wsEval = XLSX.utils.aoa_to_sheet(evalGuardrailsData);
+  XLSX.utils.book_append_sheet(wb, wsEval, "Evaluation & Guardrails");
+
   // Trigger browser download
   const cleanFilename = `AI_ROI_Executive_Model_${(inputs?.featureName || "Project")
     .replace(/[^a-zA-Z0-9]/g, "_")
